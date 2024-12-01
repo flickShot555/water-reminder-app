@@ -7,7 +7,7 @@ const SplashScreen = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigation.replace('Onboarding'); // Navigate to Onboarding screen after 3 seconds
+      navigation.replace('LoginScreen'); // Navigate to Onboarding screen after 3 seconds
     }, 3000);
 
     return () => clearTimeout(timer); // Cleanup the timer

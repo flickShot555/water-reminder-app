@@ -2,27 +2,36 @@ import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { UserContext } from '../../context/UserContext'; // Import UserContext
+import { db } from '../../firebase/firebaseConfig'; // Import Firestore
+import { doc, setDoc } from 'firebase/firestore'; // Import Firestore methods
 
 const Onboarding = () => {
   const navigation = useNavigation();
-  const { setUser } = useContext(UserContext); // Use setUser from context
+  const { user, setUser } = useContext(UserContext); // Use user and setUser from context
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
   const [gender, setGender] = useState('');
   const [bmi, setBmi] = useState('');
+  const [error, setError] = useState('');
 
-  const handleNext = () => {
-    // Save user data to context and Firestore
-    setUser({ name, age, gender, bmi });
-    // Navigate to the next screen (e.g., HomeScreen)
-    navigation.replace('HomeScreen');
+  const handleNext = async () => {
+    const userData = { ...user, name, age, gender, bmi };
+    try {
+      // Save user data to Firestore
+      await setDoc(doc(db, 'users', user.email), userData);
+      setUser(userData);
+      navigation.replace('HomeScreen');
+    } catch (error) {
+      console.error('Error saving user data to Firestore:', error);
+      setError('Error saving data. Please try again.');
+    }
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to AquaAlert</Text>
       <Text style={styles.subtitle}>Let's get started with some basic information</Text>
-
+      {error ? <Text style={styles.error}>{error}</Text> : null}
       <TextInput
         style={styles.input}
         placeholder="Name"
@@ -49,7 +58,6 @@ const Onboarding = () => {
         onChangeText={setBmi}
         keyboardType="numeric"
       />
-
       <Button title="Next" onPress={handleNext} />
     </View>
   );
@@ -83,6 +91,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     marginBottom: 16,
     backgroundColor: '#FFFFFF', // Input background color
+  },
+  error: {
+    color: 'red',
+    marginBottom: 16,
   },
 });
 

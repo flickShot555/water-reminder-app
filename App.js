@@ -3,6 +3,8 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import SplashScreen from './components/SplashScreen/SplashScreen';
+import LoginScreen from './components/LoginScreen/LoginScreen';
+import SignupScreen from './components/SignupScreen/SignupScreen';
 import Onboarding from './components/Onboarding/Onboarding';
 import HomeScreen from './components/HomeScreen/HomeScreen'; // Import HomeScreen
 import { UserProvider } from './context/UserContext'; // Import UserProvider
@@ -17,6 +19,16 @@ const App = () => {
           <Stack.Screen
             name="SplashScreen"
             component={SplashScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="LoginScreen"
+            component={LoginScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="SignupScreen"
+            component={SignupScreen}
             options={{ headerShown: false }}
           />
           <Stack.Screen
